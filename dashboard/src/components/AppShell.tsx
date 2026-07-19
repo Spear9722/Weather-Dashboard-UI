@@ -1,23 +1,21 @@
-import React, { useState } from "react";
-import { Box, Stack, alpha } from "@mui/material";
+import React from "react";
+import { Outlet } from "react-router";
+import { Box, alpha } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import SideMenu from "./SideMenu";
 import AppNavbar from "./AppNavbar";
-import Header from "./Header";
-import MainGrid from "./MainGrid";
 import { dashboardTheme } from "../themes/dashboardTheme";
-import { useWeatherSocket } from "../hooks/useWeatherSocket";
-import type { Location } from "../types/weather";
+import { useWeather } from "../context/WeatherContext";
 
 /**
- * Dashboard — only responsibility: own the location state, wire it to
- * the WebSocket hook, and compose the page shell.
- * No business logic lives here.
+ * AppShell — only responsibility: render the permanent chrome
+ * (drawer, top bar) and slot the active route view via <Outlet />.
+ *
+ * All shared state comes from WeatherContext — no props, no prop-drilling.
  */
-export default function Dashboard(): React.ReactElement {
-  const [location, setLocation] = useState<Location | null>(null);
-  const { data, connectionState, isConnecting, lastUpdatedAt } = useWeatherSocket(location);
+export default function AppShell(): React.ReactElement {
+  const { location, setLocation, connectionState, lastUpdatedAt } = useWeather();
 
   return (
     <ThemeProvider theme={dashboardTheme}>
@@ -38,10 +36,8 @@ export default function Dashboard(): React.ReactElement {
             minHeight: "100vh",
           })}
         >
-          <Stack spacing={2} sx={{ alignItems: "center", mx: 3, pb: 5, mt: { xs: 10, md: 2 } }}>
-            <Header location={location} />
-            <MainGrid data={data} location={location} isConnecting={isConnecting} />
-          </Stack>
+          {/* Each route view is rendered here */}
+          <Outlet />
         </Box>
       </Box>
     </ThemeProvider>
