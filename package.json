@@ -4,9 +4,12 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.2.0",
     "@mui/material": "^9.2.0",
+    "@mui/system": "^9.2.0",
     "@mui/x-charts": "^9.10.0",
     "@mui/x-data-grid": "^9.10.0",
     "@mui/x-date-pickers": "^9.10.0",
-    "@mui/x-tree-view": "^9.10.0"
+    "@mui/x-tree-view": "^9.10.0",
+    "@react-spring/web": "^10.1.2",
+    "dayjs": "^1.11.21"
   }
 }
