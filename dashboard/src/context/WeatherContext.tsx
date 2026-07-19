@@ -4,10 +4,13 @@ import React, {
   useState,
   type ReactNode,
 } from "react";
-import { useWeatherSocket } from "../hooks/useWeatherSocket";
-import type { ConnectionState, Location, WeatherPayload } from "../types/weather";
+// TODO: swap these two lines when the FastAPI backend is running
+import { useMockWeather as useWeatherSocket } from "../hooks/useMockWeather";
+// import { useWeatherSocket } from "../hooks/useWeatherSocket";
 import type { AppSettings } from "../types/settings";
+import type { ConnectionState, Location, WeatherPayload } from "../types/weather";
 import { DEFAULT_SETTINGS } from "../types/settings";
+import { DEFAULT_LOCATION } from "../constants/defaultLocation";
 
 // ── types ──────────────────────────────────────────────────────────────────
 
@@ -38,7 +41,8 @@ const WeatherContext = createContext<WeatherContextValue | null>(null);
  * Lives above the router so every route can consume it without prop-drilling.
  */
 export function WeatherProvider({ children }: { children: ReactNode }): React.ReactElement {
-  const [location, setLocation] = useState<Location | null>(null);
+  // TODO: replace DEFAULT_LOCATION with cached/DB location once backend is ready
+  const [location, setLocation] = useState<Location | null>(DEFAULT_LOCATION);
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
 
   const { data, connectionState, isConnecting, lastUpdatedAt, errorMessage } =
