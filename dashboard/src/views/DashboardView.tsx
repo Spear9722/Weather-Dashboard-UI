@@ -1,8 +1,8 @@
-import React from 'react';
-import { Stack } from '@mui/material';
-import Header from '../components/Header';
-import MainGrid from '../components/MainGrid';
-import { useWeather } from '../context/WeatherContext';
+import React from "react";
+import { Stack } from "@mui/material";
+import Header from "../components/Header";
+import MainGrid from "../components/MainGrid";
+import { useWeather } from "../context/WeatherContext";
 
 /**
  * DashboardView — the home route ("/").

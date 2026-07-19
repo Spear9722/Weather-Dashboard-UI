@@ -16,7 +16,7 @@ import UmbrellaIcon    from "@mui/icons-material/Umbrella";
 import AirIcon         from "@mui/icons-material/Air";
 import NorthIcon       from "@mui/icons-material/North";
 import SouthIcon       from "@mui/icons-material/South";
-import { useWeather }  from "../context/WeatherContext"
+import { useWeather }  from "../context/WeatherContext";
 import { describeWeatherCode } from "../lib/weatherCodes";
 import { formatDay, formatHour } from "../lib/formatDate";
 import EmptyState      from "../components/ui/EmptyState";

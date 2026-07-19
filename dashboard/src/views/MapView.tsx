@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import PlaceIcon        from "@mui/icons-material/Place";
 import PublicIcon       from "@mui/icons-material/Public";
-import { useWeather }   from "../context/WeatherContext"
+import { useWeather }   from "../context/WeatherContext";
 import EmptyState       from "../components/ui/EmptyState";
 
 /**

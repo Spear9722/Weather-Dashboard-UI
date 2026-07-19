@@ -1,4 +1,5 @@
 import type { WeatherPayload } from "../types/weather";
+
 /**
  * Static mock payload representing typical Fort Worth, TX conditions
  * for a mid-July afternoon.

@@ -1,15 +1,15 @@
 export interface NavItem {
   label: string;
-  iconName: string; // @mui/icons-material name — resolved in SideNavList
-  active: boolean;
+  path: string;
+  iconName: string; // resolved to a MUI icon in SideNavList
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", iconName: "Dashboard", active: true },
-  { label: "Forecast", iconName: "WbSunny", active: false },
-  { label: "Map", iconName: "Map", active: false },
-  { label: "Settings", iconName: "Settings", active: false },
-  { label: "About", iconName: "Info", active: false },
+  { label: "Dashboard", path: "/",        iconName: "Dashboard" },
+  { label: "Forecast",  path: "/forecast", iconName: "WbSunny"   },
+  { label: "Map",       path: "/map",      iconName: "Map"        },
+  { label: "Settings",  path: "/settings", iconName: "Settings"   },
+  { label: "About",     path: "/about",    iconName: "Info"       },
 ];
 
 export const DRAWER_WIDTH = 240;

@@ -13,6 +13,7 @@ import AirIcon from "@mui/icons-material/Air";
 import CompressIcon from "@mui/icons-material/Compress";
 import { buildStatCards } from "../lib/statCardData";
 import type { Location, WeatherPayload } from "../types/weather";
+import AiInsightCard from "./AiInsightCard";
 
 interface MainGridProps {
   data: WeatherPayload | null;
@@ -63,6 +64,10 @@ export default function MainGrid({ data, location, isConnecting }: MainGridProps
 
       <Grid size={{ xs: 12 }}>
         <DailyForecast daily={daily} />
+      </Grid>
+
+      <Grid size={{ xs: 12 }}>
+        <AiInsightCard />
       </Grid>
     </Grid>
   );
