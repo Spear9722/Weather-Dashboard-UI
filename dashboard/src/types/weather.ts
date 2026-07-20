@@ -25,6 +25,7 @@ export interface HourlyPoint {
   temperature: number;
   precipitation_probability: number | null;
   weather_code: number;
+  wind_speed: number;
 }
 
 export interface DailyPoint {

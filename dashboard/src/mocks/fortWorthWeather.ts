@@ -21,9 +21,9 @@ export const FORT_WORTH_MOCK: WeatherPayload = {
     apparent_temperature: 42.1,
     humidity: 34,
     precipitation: 0.0,
-    weather_code: 1,        // Mostly clear
+    weather_code: 1,
     wind_speed: 18.4,
-    wind_direction: 185,    // South
+    wind_direction: 185,
     pressure: 1008.6,
     is_day: true,
     time: "2026-07-19T14:00",
@@ -31,30 +31,30 @@ export const FORT_WORTH_MOCK: WeatherPayload = {
 
   // 24 hourly points starting at 14:00 (current hour)
   hourly: [
-    { time: "2026-07-19T14:00", temperature: 38.2, precipitation_probability: 3,  weather_code: 1  },
-    { time: "2026-07-19T15:00", temperature: 39.0, precipitation_probability: 3,  weather_code: 1  },
-    { time: "2026-07-19T16:00", temperature: 39.4, precipitation_probability: 5,  weather_code: 2  },
-    { time: "2026-07-19T17:00", temperature: 38.8, precipitation_probability: 8,  weather_code: 2  },
-    { time: "2026-07-19T18:00", temperature: 37.5, precipitation_probability: 10, weather_code: 2  },
-    { time: "2026-07-19T19:00", temperature: 36.1, precipitation_probability: 12, weather_code: 2  },
-    { time: "2026-07-19T20:00", temperature: 34.2, precipitation_probability: 8,  weather_code: 1  },
-    { time: "2026-07-19T21:00", temperature: 32.6, precipitation_probability: 5,  weather_code: 1  },
-    { time: "2026-07-19T22:00", temperature: 31.3, precipitation_probability: 3,  weather_code: 0  },
-    { time: "2026-07-19T23:00", temperature: 30.1, precipitation_probability: 2,  weather_code: 0  },
-    { time: "2026-07-20T00:00", temperature: 29.4, precipitation_probability: 2,  weather_code: 0  },
-    { time: "2026-07-20T01:00", temperature: 28.8, precipitation_probability: 2,  weather_code: 0  },
-    { time: "2026-07-20T02:00", temperature: 28.2, precipitation_probability: 2,  weather_code: 0  },
-    { time: "2026-07-20T03:00", temperature: 27.7, precipitation_probability: 2,  weather_code: 0  },
-    { time: "2026-07-20T04:00", temperature: 27.2, precipitation_probability: 3,  weather_code: 0  },
-    { time: "2026-07-20T05:00", temperature: 27.0, precipitation_probability: 3,  weather_code: 0  },
-    { time: "2026-07-20T06:00", temperature: 27.4, precipitation_probability: 4,  weather_code: 1  },
-    { time: "2026-07-20T07:00", temperature: 28.9, precipitation_probability: 4,  weather_code: 1  },
-    { time: "2026-07-20T08:00", temperature: 30.8, precipitation_probability: 5,  weather_code: 1  },
-    { time: "2026-07-20T09:00", temperature: 32.7, precipitation_probability: 5,  weather_code: 1  },
-    { time: "2026-07-20T10:00", temperature: 34.4, precipitation_probability: 5,  weather_code: 2  },
-    { time: "2026-07-20T11:00", temperature: 36.0, precipitation_probability: 8,  weather_code: 2  },
-    { time: "2026-07-20T12:00", temperature: 37.3, precipitation_probability: 10, weather_code: 2  },
-    { time: "2026-07-20T13:00", temperature: 38.1, precipitation_probability: 10, weather_code: 2  },
+    { time: "2026-07-19T14:00", temperature: 38.2, precipitation_probability: 3,  wind_speed: 18.4, weather_code: 1 },
+    { time: "2026-07-19T15:00", temperature: 39.0, precipitation_probability: 3,  wind_speed: 19.2, weather_code: 1 },
+    { time: "2026-07-19T16:00", temperature: 39.4, precipitation_probability: 5,  wind_speed: 20.1, weather_code: 2 },
+    { time: "2026-07-19T17:00", temperature: 38.8, precipitation_probability: 8,  wind_speed: 21.0, weather_code: 2 },
+    { time: "2026-07-19T18:00", temperature: 37.5, precipitation_probability: 10, wind_speed: 19.8, weather_code: 2 },
+    { time: "2026-07-19T19:00", temperature: 36.1, precipitation_probability: 12, wind_speed: 17.5, weather_code: 2 },
+    { time: "2026-07-19T20:00", temperature: 34.2, precipitation_probability: 8,  wind_speed: 15.2, weather_code: 1 },
+    { time: "2026-07-19T21:00", temperature: 32.6, precipitation_probability: 5,  wind_speed: 13.0, weather_code: 1 },
+    { time: "2026-07-19T22:00", temperature: 31.3, precipitation_probability: 3,  wind_speed: 11.4, weather_code: 0 },
+    { time: "2026-07-19T23:00", temperature: 30.1, precipitation_probability: 2,  wind_speed: 10.2, weather_code: 0 },
+    { time: "2026-07-20T00:00", temperature: 29.4, precipitation_probability: 2,  wind_speed:  9.8, weather_code: 0 },
+    { time: "2026-07-20T01:00", temperature: 28.8, precipitation_probability: 2,  wind_speed:  9.1, weather_code: 0 },
+    { time: "2026-07-20T02:00", temperature: 28.2, precipitation_probability: 2,  wind_speed:  8.5, weather_code: 0 },
+    { time: "2026-07-20T03:00", temperature: 27.7, precipitation_probability: 2,  wind_speed:  8.0, weather_code: 0 },
+    { time: "2026-07-20T04:00", temperature: 27.2, precipitation_probability: 3,  wind_speed:  7.6, weather_code: 0 },
+    { time: "2026-07-20T05:00", temperature: 27.0, precipitation_probability: 3,  wind_speed:  7.2, weather_code: 0 },
+    { time: "2026-07-20T06:00", temperature: 27.4, precipitation_probability: 4,  wind_speed:  8.0, weather_code: 1 },
+    { time: "2026-07-20T07:00", temperature: 28.9, precipitation_probability: 4,  wind_speed:  9.5, weather_code: 1 },
+    { time: "2026-07-20T08:00", temperature: 30.8, precipitation_probability: 5,  wind_speed: 11.8, weather_code: 1 },
+    { time: "2026-07-20T09:00", temperature: 32.7, precipitation_probability: 5,  wind_speed: 13.9, weather_code: 1 },
+    { time: "2026-07-20T10:00", temperature: 34.4, precipitation_probability: 5,  wind_speed: 15.5, weather_code: 2 },
+    { time: "2026-07-20T11:00", temperature: 36.0, precipitation_probability: 8,  wind_speed: 16.8, weather_code: 2 },
+    { time: "2026-07-20T12:00", temperature: 37.3, precipitation_probability: 10, wind_speed: 17.9, weather_code: 2 },
+    { time: "2026-07-20T13:00", temperature: 38.1, precipitation_probability: 10, wind_speed: 18.2, weather_code: 2 },
   ],
 
   // 7-day daily forecast
@@ -79,7 +79,7 @@ export const FORT_WORTH_MOCK: WeatherPayload = {
     },
     {
       date: "2026-07-21",
-      weather_code: 61,       // Light rain
+      weather_code: 61,
       temperature_max: 34.2,
       temperature_min: 25.1,
       precipitation_probability_max: 55,
@@ -88,7 +88,7 @@ export const FORT_WORTH_MOCK: WeatherPayload = {
     },
     {
       date: "2026-07-22",
-      weather_code: 63,       // Rain
+      weather_code: 63,
       temperature_max: 30.8,
       temperature_min: 23.4,
       precipitation_probability_max: 75,
@@ -97,7 +97,7 @@ export const FORT_WORTH_MOCK: WeatherPayload = {
     },
     {
       date: "2026-07-23",
-      weather_code: 80,       // Showers
+      weather_code: 80,
       temperature_max: 32.1,
       temperature_min: 23.9,
       precipitation_probability_max: 60,
@@ -115,7 +115,7 @@ export const FORT_WORTH_MOCK: WeatherPayload = {
     },
     {
       date: "2026-07-25",
-      weather_code: 0,        // Clear sky
+      weather_code: 0,
       temperature_max: 38.9,
       temperature_min: 26.1,
       precipitation_probability_max: 5,
