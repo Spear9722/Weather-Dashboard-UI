@@ -42,7 +42,7 @@ const WeatherContext = createContext<WeatherContextValue | null>(null);
  */
 export function WeatherProvider({ children }: { children: ReactNode }): React.ReactElement {
   // TODO: replace DEFAULT_LOCATION with cached/DB location once backend is ready
-  const [location, setLocation] = useState<Location | null>(DEFAULT_LOCATION);
+  const [location, setLocation] = useState<Location | null>(null);
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
 
   const { data, connectionState, isConnecting, lastUpdatedAt, errorMessage } =

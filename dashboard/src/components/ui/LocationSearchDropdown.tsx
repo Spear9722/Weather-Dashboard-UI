@@ -12,7 +12,9 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
-import { useLocationSearch } from "../../hooks/useLocationSearch";
+// TODO: swap these two lines when the FastAPI backend is running
+import { useMockLocationSearch as useLocationSearch } from "../../hooks/useMockLocationSearch";
+// import { useLocationSearch } from "../../hooks/useLocationSearch";
 
 import type { GeocodeResult, Location } from "../../types/weather";
 
