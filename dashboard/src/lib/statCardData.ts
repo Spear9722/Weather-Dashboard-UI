@@ -1,7 +1,9 @@
 import { degreesToCompass } from "./wind";
 import { humidityLabel, isHumidityComfortable } from "./humidityLabel";
-import { windSpeedLabel, isWindComfortable } from "./windLabel"
+import { windSpeedLabel, isWindComfortable } from "./windLabel";
 import { pressureLabel, isPressureHigh } from "./pressure";
+import { convertTemp, convertWind, tempUnitLabel, windUnitLabel } from "./units";
+import type { AppSettings } from "../types/settings";
 import type { CurrentConditions, DailyPoint } from "../types/weather";
 
 export interface StatCardData {
@@ -13,16 +15,24 @@ export interface StatCardData {
   trend: { label: string; positive: boolean };
 }
 
-export function buildStatCards(current: CurrentConditions, today: DailyPoint): StatCardData[] {
+export function buildStatCards(
+  current: CurrentConditions,
+  today: DailyPoint,
+  settings: AppSettings
+): StatCardData[] {
+  const { temperatureUnit, windUnit } = settings;
+  const tempUnit  = tempUnitLabel(temperatureUnit);
+  const windLabel = windUnitLabel(windUnit);
+
   return [
     {
       title: "Temperature",
-      value: String(Math.round(current.temperature)),
-      unit: "°C",
-      subtitle: `Feels like ${Math.round(current.apparent_temperature)}°C`,
+      value: String(convertTemp(current.temperature, temperatureUnit)),
+      unit: tempUnit,
+      subtitle: `Feels like ${convertTemp(current.apparent_temperature, temperatureUnit)}${tempUnit}`,
       iconName: "WbSunny",
       trend: {
-        label: `${Math.round(today.temperature_max)}° / ${Math.round(today.temperature_min)}°`,
+        label: `${convertTemp(today.temperature_max, temperatureUnit)}° / ${convertTemp(today.temperature_min, temperatureUnit)}°`,
         positive: current.temperature >= today.temperature_min,
       },
     },
@@ -39,8 +49,8 @@ export function buildStatCards(current: CurrentConditions, today: DailyPoint): S
     },
     {
       title: "Wind Speed",
-      value: String(Math.round(current.wind_speed)),
-      unit: "km/h",
+      value: String(convertWind(current.wind_speed, windUnit)),
+      unit: windLabel,
       subtitle: `Direction: ${degreesToCompass(current.wind_direction)}`,
       iconName: "Air",
       trend: {

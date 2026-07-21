@@ -7,13 +7,14 @@ import DailyForecast from "./DailyForecast";
 import SunriseSunset from "./SunriseSunset";
 import EmptyState from "./ui/EmptyState";
 import ConnectingState from "./ui/ConnectingState";
-import WbSunnyIcon from "@mui/icons-material/WbSunny";
-import WaterDropIcon from "@mui/icons-material/WaterDrop";
-import AirIcon from "@mui/icons-material/Air";
-import CompressIcon from "@mui/icons-material/Compress";
-import { buildStatCards } from "../lib/statCardData";
-import type { Location, WeatherPayload } from "../types/weather";
 import AiInsightCard from "./AiInsightCard";
+import WbSunnyIcon  from "@mui/icons-material/WbSunny";
+import WaterDropIcon from "@mui/icons-material/WaterDrop";
+import AirIcon       from "@mui/icons-material/Air";
+import CompressIcon  from "@mui/icons-material/Compress";
+import { buildStatCards } from "../lib/statCardData";
+import { useWeather } from "../context/WeatherContext";
+import type { Location, WeatherPayload } from "../types/weather";
 
 interface MainGridProps {
   data: WeatherPayload | null;
@@ -28,19 +29,16 @@ const STAT_ICONS: Record<string, React.ReactElement> = {
   Compress:  <CompressIcon fontSize="small" />,
 };
 
-/**
- * MainGrid — only responsibility: decide which top-level state to render
- * (empty / connecting / data) and lay out the data cards in the MUI grid.
- * All business logic (labels, trends) lives in lib/statCardData.ts.
- */
 export default function MainGrid({ data, location, isConnecting }: MainGridProps): React.ReactElement {
+  const { settings } = useWeather();
+
   if (!location) return <EmptyState />;
   if (isConnecting && !data) return <ConnectingState />;
   if (!data) return <></>;
 
   const { current, hourly, daily } = data;
   const today = daily[0];
-  const statCards = buildStatCards(current, today);
+  const statCards = buildStatCards(current, today, settings);
 
   return (
     <Grid container spacing={3} sx={{ width: "100%" }}>

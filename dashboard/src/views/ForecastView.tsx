@@ -21,8 +21,10 @@ import SouthIcon    from "@mui/icons-material/South";
 import { useWeather }            from "../context/WeatherContext";
 import { describeWeatherCode }   from "../lib/weatherCodes";
 import { formatDay, formatHour } from "../lib/formatDate";
-import EmptyState                from "../components/ui/EmptyState";
-import ConnectingState           from "../components/ui/ConnectingState";
+import { convertTemp, convertWind, tempUnitLabel, windUnitLabel } from "../lib/units";
+import EmptyState    from "../components/ui/EmptyState";
+import ConnectingState from "../components/ui/ConnectingState";
+import type { AppSettings } from "../types/settings";
 
 // ── types ──────────────────────────────────────────────────────────────────
 
@@ -51,22 +53,13 @@ interface HourlyToggleProps {
   onChange: (value: HourlyView) => void;
 }
 
-/**
- * HourlyToggle — only responsibility: render the Temp / Wind toggle and
- * call onChange with the new value. Uses ToggleButtonGroup instead of
- * Chip onClick because MUI v9 Chip swallows click events when combined
- * with custom sx overrides.
- */
 function HourlyToggle({ value, onChange }: HourlyToggleProps): React.ReactElement {
   return (
     <ToggleButtonGroup
       value={value}
       exclusive
       onChange={(_event: React.MouseEvent<HTMLElement>, newValue: string | null) => {
-        // Guard handles the null case (clicking the already-selected button)
-        if (newValue === "temp" || newValue === "wind") {
-          onChange(newValue);
-        }
+        if (newValue === "temp" || newValue === "wind") onChange(newValue);
       }}
       size="small"
       sx={{ height: 32 }}
@@ -74,47 +67,26 @@ function HourlyToggle({ value, onChange }: HourlyToggleProps): React.ReactElemen
       <ToggleButton
         value="temp"
         sx={{
-          fontSize: 11,
-          px: 1.5,
-          textTransform: "none",
-          display: "flex",
-          alignItems: "center",
-          gap: "4px",
-          borderColor: "divider",
-          color: "text.secondary",
-          "&.Mui-selected": {
-            bgcolor: "rgba(245,158,11,0.14)",
-            color: "#f59e0b",
-            borderColor: "#f59e0b !important",
-          },
+          fontSize: 11, px: 1.5, textTransform: "none",
+          display: "flex", alignItems: "center", gap: "4px",
+          borderColor: "divider", color: "text.secondary",
+          "&.Mui-selected": { bgcolor: "rgba(245,158,11,0.14)", color: "#f59e0b", borderColor: "#f59e0b !important" },
           "&.Mui-selected:hover": { bgcolor: "rgba(245,158,11,0.22)" },
         }}
       >
-        <WbSunnyIcon sx={{ fontSize: 13 }} />
-        Temp
+        <WbSunnyIcon sx={{ fontSize: 13 }} /> Temp
       </ToggleButton>
-
       <ToggleButton
         value="wind"
         sx={{
-          fontSize: 11,
-          px: 1.5,
-          textTransform: "none",
-          display: "flex",
-          alignItems: "center",
-          gap: "4px",
-          borderColor: "divider",
-          color: "text.secondary",
-          "&.Mui-selected": {
-            bgcolor: "rgba(56,189,248,0.14)",
-            color: "#38bdf8",
-            borderColor: "#38bdf8 !important",
-          },
+          fontSize: 11, px: 1.5, textTransform: "none",
+          display: "flex", alignItems: "center", gap: "4px",
+          borderColor: "divider", color: "text.secondary",
+          "&.Mui-selected": { bgcolor: "rgba(56,189,248,0.14)", color: "#38bdf8", borderColor: "#38bdf8 !important" },
           "&.Mui-selected:hover": { bgcolor: "rgba(56,189,248,0.22)" },
         }}
       >
-        <AirIcon sx={{ fontSize: 13 }} />
-        Wind
+        <AirIcon sx={{ fontSize: 13 }} /> Wind
       </ToggleButton>
     </ToggleButtonGroup>
   );
@@ -124,60 +96,40 @@ function HourlyToggle({ value, onChange }: HourlyToggleProps): React.ReactElemen
 
 interface HourRowProps {
   time: string;
-  temp: number;
-  windSpeed: number;
+  temp: number;        // raw °C from payload
+  windSpeed: number;   // raw km/h from payload
   precip: number | null;
   code: number;
   view: HourlyView;
+  settings: AppSettings;
 }
 
-function HourRow({ time, temp, windSpeed, precip, code, view }: HourRowProps): React.ReactElement {
+function HourRow({ time, temp, windSpeed, precip, code, view, settings }: HourRowProps): React.ReactElement {
   const { label } = describeWeatherCode(code, true);
+  const { temperatureUnit, windUnit } = settings;
+
+  const displayTemp = convertTemp(temp, temperatureUnit);
+  const displayWind = convertWind(windSpeed, windUnit);
 
   return (
-    <Stack
-      sx={{
-        flexDirection: "row",
-        alignItems: "center",
-        py: 1,
-        borderBottom: "1px solid",
-        borderColor: "divider",
-      }}
-    >
-      {/* Time */}
-      <Typography
-        variant="caption"
-        sx={{ width: 52, fontFamily: "monospace", color: "text.secondary", flexShrink: 0 }}
-      >
+    <Stack sx={{ flexDirection: "row", alignItems: "center", py: 1, borderBottom: "1px solid", borderColor: "divider" }}>
+      <Typography variant="caption" sx={{ width: 52, fontFamily: "monospace", color: "text.secondary", flexShrink: 0 }}>
         {formatHour(time)}
       </Typography>
-
-      {/* Condition label */}
-      <Typography
-        variant="body2"
-        sx={{ flex: 1, color: "text.secondary", fontSize: 12 }}
-      >
+      <Typography variant="body2" sx={{ flex: 1, color: "text.secondary", fontSize: 12 }}>
         {label}
       </Typography>
 
-      {/* Toggled metric */}
       {view === "temp" ? (
-        <Typography
-          variant="body2"
-          sx={{ fontWeight: 600, color: tempColor(temp), width: 60, textAlign: "right", flexShrink: 0 }}
-        >
-          {Math.round(temp)}°C
+        <Typography variant="body2" sx={{ fontWeight: 600, color: tempColor(temp), width: 60, textAlign: "right", flexShrink: 0 }}>
+          {displayTemp}{tempUnitLabel(temperatureUnit)}
         </Typography>
       ) : (
-        <Typography
-          variant="body2"
-          sx={{ fontWeight: 600, color: windColor(windSpeed), width: 72, textAlign: "right", flexShrink: 0 }}
-        >
-          {Math.round(windSpeed)} km/h
+        <Typography variant="body2" sx={{ fontWeight: 600, color: windColor(windSpeed), width: 80, textAlign: "right", flexShrink: 0 }}>
+          {displayWind} {windUnitLabel(windUnit)}
         </Typography>
       )}
 
-      {/* Precipitation — always visible */}
       {precip !== null && (
         <Chip
           icon={<UmbrellaIcon sx={{ fontSize: "12px !important" }} />}
@@ -196,13 +148,16 @@ function HourRow({ time, temp, windSpeed, precip, code, view }: HourRowProps): R
 interface DayCardProps {
   date: string;
   code: number;
-  max: number;
-  min: number;
+  max: number;   // raw °C
+  min: number;   // raw °C
   precipMax: number | null;
+  settings: AppSettings;
 }
 
-function DayCard({ date, code, max, min, precipMax }: DayCardProps): React.ReactElement {
+function DayCard({ date, code, max, min, precipMax, settings }: DayCardProps): React.ReactElement {
   const { label } = describeWeatherCode(code, true);
+  const { temperatureUnit } = settings;
+  const unit = tempUnitLabel(temperatureUnit);
   const range = max - min;
 
   return (
@@ -219,27 +174,19 @@ function DayCard({ date, code, max, min, precipMax }: DayCardProps): React.React
           <Stack sx={{ flexDirection: "row", alignItems: "center", gap: "4px" }}>
             <NorthIcon sx={{ fontSize: 14, color: "#ef5350" }} />
             <Typography variant="body2" sx={{ fontWeight: 700, color: "#ef5350" }}>
-              {Math.round(max)}°
+              {convertTemp(max, temperatureUnit)}{unit}
             </Typography>
           </Stack>
           <Stack sx={{ flexDirection: "row", alignItems: "center", gap: "4px" }}>
             <SouthIcon sx={{ fontSize: 14, color: "#38bdf8" }} />
             <Typography variant="body2" sx={{ color: "#38bdf8" }}>
-              {Math.round(min)}°
+              {convertTemp(min, temperatureUnit)}{unit}
             </Typography>
           </Stack>
         </Stack>
 
-        {/* Temp range bar */}
         <Box sx={{ mt: 1, height: 4, borderRadius: 2, bgcolor: "divider", overflow: "hidden" }}>
-          <Box
-            sx={{
-              height: "100%",
-              width: `${Math.min(100, (range / 20) * 100)}%`,
-              bgcolor: "#f59e0b",
-              borderRadius: 2,
-            }}
-          />
+          <Box sx={{ height: "100%", width: `${Math.min(100, (range / 20) * 100)}%`, bgcolor: "#f59e0b", borderRadius: 2 }} />
         </Box>
 
         {precipMax !== null && (
@@ -258,28 +205,27 @@ function DayCard({ date, code, max, min, precipMax }: DayCardProps): React.React
 // ── ForecastView ───────────────────────────────────────────────────────────
 
 export default function ForecastView(): React.ReactElement {
-  const { location, data, isConnecting } = useWeather();
-
-  // Drives what HourRow renders — lifted here so toggling re-renders all rows
+  const { location, data, isConnecting, settings } = useWeather();
   const [hourlyView, setHourlyView] = useState<HourlyView>("temp");
 
   if (!location) return <Box sx={{ mt: 10 }}><EmptyState /></Box>;
   if (isConnecting && !data) return <Box sx={{ mt: 10 }}><ConnectingState /></Box>;
 
+  const colHeader = hourlyView === "temp"
+    ? `Temp (${tempUnitLabel(settings.temperatureUnit)})`
+    : `Wind (${windUnitLabel(settings.windUnit)})`;
+
   return (
     <Container maxWidth="lg" sx={{ pt: { xs: 10, md: 3 }, pb: 6 }}>
 
-      {/* Page header */}
       <Stack spacing={0.5} sx={{ mb: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: 700 }}>
-          Forecast
-        </Typography>
+        <Typography variant="h4" sx={{ fontWeight: 700 }}>Forecast</Typography>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {location.label} · 7-day outlook + 24-hour hourly breakdown
         </Typography>
       </Stack>
 
-      {/* ── 7-day daily cards ─────────────────────────────────────────── */}
+      {/* 7-day daily cards */}
       <Typography variant="overline" sx={{ color: "primary.main", display: "block", mb: 1.5 }}>
         7-day daily
       </Typography>
@@ -294,6 +240,7 @@ export default function ForecastView(): React.ReactElement {
                 max={d.temperature_max}
                 min={d.temperature_min}
                 precipMax={d.precipitation_probability_max}
+                settings={settings}
               />
             </Grid>
           ))}
@@ -310,54 +257,22 @@ export default function ForecastView(): React.ReactElement {
 
       <Divider sx={{ mb: 4 }} />
 
-      {/* ── 24-hour hourly breakdown ──────────────────────────────────── */}
-      <Stack
-        sx={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 1.5,
-        }}
-      >
+      {/* 24-hour hourly breakdown */}
+      <Stack sx={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", mb: 1.5 }}>
         <Typography variant="overline" sx={{ color: "primary.main" }}>
           24-hour hourly
         </Typography>
         <HourlyToggle value={hourlyView} onChange={setHourlyView} />
       </Stack>
 
-      {/* Column header row */}
-      <Stack
-        sx={{
-          flexDirection: "row",
-          alignItems: "center",
-          px: 2.5,
-          py: 0.75,
-          mb: 0.5,
-          borderRadius: 1,
-          bgcolor: "rgba(255,255,255,0.03)",
-        }}
-      >
-        <Typography variant="caption" sx={{ width: 52, color: "text.secondary", flexShrink: 0 }}>
-          Time
+      {/* Column header */}
+      <Stack sx={{ flexDirection: "row", alignItems: "center", px: 2.5, py: 0.75, mb: 0.5, borderRadius: 1, bgcolor: "rgba(255,255,255,0.03)" }}>
+        <Typography variant="caption" sx={{ width: 52, color: "text.secondary", flexShrink: 0 }}>Time</Typography>
+        <Typography variant="caption" sx={{ flex: 1, color: "text.secondary" }}>Condition</Typography>
+        <Typography variant="caption" sx={{ width: 80, textAlign: "right", color: hourlyView === "temp" ? "#f59e0b" : "#38bdf8", flexShrink: 0 }}>
+          {colHeader}
         </Typography>
-        <Typography variant="caption" sx={{ flex: 1, color: "text.secondary" }}>
-          Condition
-        </Typography>
-        <Typography
-          variant="caption"
-          sx={{
-            width: hourlyView === "temp" ? 60 : 72,
-            textAlign: "right",
-            color: hourlyView === "temp" ? "#f59e0b" : "#38bdf8",
-            flexShrink: 0,
-          }}
-        >
-          {hourlyView === "temp" ? "Temp" : "Wind"}
-        </Typography>
-        <Typography
-          variant="caption"
-          sx={{ width: 60, textAlign: "right", color: "text.secondary", ml: 1.5, flexShrink: 0 }}
-        >
+        <Typography variant="caption" sx={{ width: 60, textAlign: "right", color: "text.secondary", ml: 1.5, flexShrink: 0 }}>
           Rain %
         </Typography>
       </Stack>
@@ -374,6 +289,7 @@ export default function ForecastView(): React.ReactElement {
                 precip={h.precipitation_probability}
                 code={h.weather_code}
                 view={hourlyView}
+                settings={settings}
               />
             ))
           ) : (
@@ -383,7 +299,6 @@ export default function ForecastView(): React.ReactElement {
           )}
         </CardContent>
       </Card>
-
     </Container>
   );
 }
