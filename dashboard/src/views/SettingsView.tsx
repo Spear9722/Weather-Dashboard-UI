@@ -13,11 +13,19 @@ import {
   Typography,
   Chip,
 } from "@mui/material";
-import CheckCircleIcon   from "@mui/icons-material/CheckCircle";
-import { useWeather }    from "../context/WeatherContext";
-import type { AppSettings, TemperatureUnit, UpdateInterval, WindUnit } from "../types/settings";
+import CheckCircleIcon  from "@mui/icons-material/CheckCircle";
+import DarkModeIcon     from "@mui/icons-material/DarkMode";
+import LightModeIcon    from "@mui/icons-material/LightMode";
+import { useWeather }   from "../context/WeatherContext";
+import type {
+  AppSettings,
+  TemperatureUnit,
+  ThemeMode,
+  UpdateInterval,
+  WindUnit,
+} from "../types/settings";
 
-// ── sub-components ─────────────────────────────────────────────────────────
+// ── SettingsSection ─────────────────────────────────────────────────────────
 
 interface SettingsSectionProps {
   title: string;
@@ -41,7 +49,7 @@ function SettingsSection({ title, description, children }: SettingsSectionProps)
   );
 }
 
-// ── view ───────────────────────────────────────────────────────────────────
+// ── SettingsView ─────────────────────────────────────────────────────────────
 
 export default function SettingsView(): React.ReactElement {
   const { settings, updateSettings } = useWeather();
@@ -49,7 +57,6 @@ export default function SettingsView(): React.ReactElement {
   function handleChange<K extends keyof AppSettings>(key: K) {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
       const raw = e.target.value;
-      // UpdateInterval values are numbers
       const value = key === "updateInterval" ? (Number(raw) as UpdateInterval) : raw;
       updateSettings({ [key]: value } as Pick<AppSettings, K>);
     };
@@ -58,17 +65,53 @@ export default function SettingsView(): React.ReactElement {
   return (
     <Container maxWidth="sm" sx={{ pt: { xs: 10, md: 3 }, pb: 6 }}>
       <Stack spacing={0.5} sx={{ mb: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: 700 }}>
-          Settings
-        </Typography>
+        <Typography variant="h4" sx={{ fontWeight: 700 }}>Settings</Typography>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           Preferences are saved for this session.
         </Typography>
       </Stack>
 
       <Stack spacing={3}>
+
+        {/* Theme */}
+        <SettingsSection
+          title="Appearance"
+          description="Switch between dark and light mode."
+        >
+          <FormControl>
+            <FormLabel sx={{ fontSize: 13, color: "text.secondary", mb: 1 }}>
+              Theme
+            </FormLabel>
+            <RadioGroup
+              value={settings.themeMode}
+              onChange={handleChange("themeMode")}
+              row
+            >
+              {(["light", "dark"] as ThemeMode[]).map((m) => (
+                <FormControlLabel
+                  key={m}
+                  value={m}
+                  label={
+                    <Stack sx={{ flexDirection: "row", alignItems: "center", gap: "6px" }}>
+                      {m === "light"
+                        ? <LightModeIcon sx={{ fontSize: 16 }} />
+                        : <DarkModeIcon sx={{ fontSize: 16 }} />}
+                      {m === "light" ? "Light" : "Dark"}
+                    </Stack>
+                  }
+                  control={<Radio size="small" />}
+                  sx={{ "& .MuiFormControlLabel-label": { fontSize: 14 } }}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+        </SettingsSection>
+
         {/* Temperature unit */}
-        <SettingsSection title="Temperature" description="Choose the unit displayed across all views.">
+        <SettingsSection
+          title="Temperature"
+          description="Choose the unit displayed across all views."
+        >
           <FormControl>
             <FormLabel sx={{ fontSize: 13, color: "text.secondary", mb: 1 }}>Unit</FormLabel>
             <RadioGroup
@@ -90,7 +133,10 @@ export default function SettingsView(): React.ReactElement {
         </SettingsSection>
 
         {/* Wind unit */}
-        <SettingsSection title="Wind speed" description="Unit for wind speed readings.">
+        <SettingsSection
+          title="Wind speed"
+          description="Unit for wind speed readings."
+        >
           <FormControl>
             <FormLabel sx={{ fontSize: 13, color: "text.secondary", mb: 1 }}>Unit</FormLabel>
             <RadioGroup
@@ -112,7 +158,10 @@ export default function SettingsView(): React.ReactElement {
         </SettingsSection>
 
         {/* Update interval */}
-        <SettingsSection title="Live update interval" description="How often the dashboard polls for new weather data.">
+        <SettingsSection
+          title="Live update interval"
+          description="How often the dashboard polls for new weather data."
+        >
           <FormControl>
             <FormLabel sx={{ fontSize: 13, color: "text.secondary", mb: 1 }}>Interval</FormLabel>
             <RadioGroup
@@ -142,12 +191,21 @@ export default function SettingsView(): React.ReactElement {
 
         <Divider />
 
-        {/* Active summary */}
+        {/* Active configuration summary */}
         <Stack spacing={1}>
           <Typography variant="overline" sx={{ color: "primary.main" }}>
             Active configuration
           </Typography>
           <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "8px" }}>
+            <Chip
+              icon={settings.themeMode === "dark"
+                ? <DarkModeIcon sx={{ fontSize: "14px !important" }} />
+                : <LightModeIcon sx={{ fontSize: "14px !important" }} />}
+              label={settings.themeMode === "dark" ? "Dark mode" : "Light mode"}
+              size="small"
+              color="primary"
+              variant="outlined"
+            />
             <Chip
               icon={<CheckCircleIcon sx={{ fontSize: "14px !important" }} />}
               label={settings.temperatureUnit === "celsius" ? "°C" : "°F"}
@@ -171,6 +229,7 @@ export default function SettingsView(): React.ReactElement {
             />
           </Stack>
         </Stack>
+
       </Stack>
     </Container>
   );
