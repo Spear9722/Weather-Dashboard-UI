@@ -43,7 +43,7 @@ export default function LocationSearchDropdown({
       longitude: r.longitude,
     });
 
-    setQuery(label);
+    setQuery("");
     setOpen(false);
   }
 
